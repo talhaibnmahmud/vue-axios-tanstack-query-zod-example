@@ -8,7 +8,7 @@ const envSchema = z.object({
   VITE_BASE_URL: z.string().default('https://jsonplaceholder.typicode.com')
 })
 
-export const env = envSchema.parse(process.env)
+export const env = envSchema.parse(import.meta.env)
 
 declare global {
   namespace NodeJS {

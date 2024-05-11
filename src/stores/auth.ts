@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 
 import { demoUser } from '@/schemas/auth.schema'
 import type { AuthType } from '@/schemas/auth.schema'
-import { onMounted } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
   // const router = useRouter()
@@ -42,11 +41,9 @@ export const useAuthStore = defineStore('auth', () => {
     return '257814|TzDyZhXSWS3JzxBX3pbhX8nlmeQEBrtN3wDzKXwT4f993b28'
   }
 
-  onMounted(() => {
-    if (!auth.value) {
-      auth.value = demoUser
-    }
-  })
+  function demoLogin() {
+    auth.value = demoUser
+  }
 
-  return { auth, register, login, logout, isLoggedIn, demoToken }
+  return { auth, register, login, logout, isLoggedIn, demoToken, demoLogin }
 })
