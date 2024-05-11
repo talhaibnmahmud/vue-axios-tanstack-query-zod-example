@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+
+import HelloWorld from '@/components/HelloWorld.vue'
 </script>
 
 <template>
@@ -18,6 +20,9 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <RouterView />
+
+  <!-- Tanstack Query Devtools -->
+  <VueQueryDevtools />
 </template>
 
 <style scoped>
