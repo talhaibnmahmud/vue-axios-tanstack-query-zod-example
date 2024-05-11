@@ -12,17 +12,26 @@ type FetchOptions<Z extends z.ZodTypeAny, D = any> = {
   options?: AxiosRequestConfig
 }
 
+const getMutator = (method: AxiosRequestConfig['method'] = 'POST', useAuth = true) => {
+  const instance = useAuth ? axiosInstanceWithToken : axiosInstance
+
+  if (method === 'PUT') return instance.put
+  if (method === 'PATCH') return instance.patch
+
+  return instance.post
+}
+
 export const mutator = async <D = any, Z extends z.ZodTypeAny = z.ZodNever, R = z.infer<Z>>({
   url,
   body,
   schema,
   useAuth = true,
-  options = {}
+  options = { method: 'POST' }
 }: FetchOptions<Z, D>) => {
-  const instance = useAuth ? axiosInstanceWithToken : axiosInstance
+  const mutator = getMutator(options.method, useAuth)
 
   try {
-    const response = await instance.post<R>(url, body, options)
+    const response = await mutator<R>(url, body, options)
     if (!schema) return response.data
 
     const data = schema.parse(response.data)

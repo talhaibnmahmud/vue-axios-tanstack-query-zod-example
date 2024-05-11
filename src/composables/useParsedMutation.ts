@@ -19,7 +19,7 @@ export const useParsedMutation = <D = any, Z extends z.ZodTypeAny = z.ZodNever, 
   body,
   schema,
   useAuth = true,
-  options = {}
+  options = { method: 'POST' }
 }: FetchOptions<Z, D>) => {
   const mutation = useMutation<R, Error, D, [string, string, D, Z, boolean, AxiosRequestConfig]>({
     mutationKey: [key, url, body, schema, useAuth, options],
