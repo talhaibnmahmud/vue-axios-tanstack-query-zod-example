@@ -34,3 +34,6 @@ export const postSchema = z.object({
 })
 
 export type Post = z.infer<typeof postSchema>
+
+export const postsSchema = z.array(postSchema)
+export type Posts = z.infer<typeof postsSchema>

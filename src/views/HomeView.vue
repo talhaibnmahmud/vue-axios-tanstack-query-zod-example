@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { useFetcher } from '@/composables/useFetcher'
-import type { Post } from '@/schemas/post.schema'
+import { useParsedQuery } from '@/composables/useParsedQuery'
+import { postsSchema } from '@/schemas/post.schema'
 
-const { data, error, isLoading, refetch } = useFetcher<Post[]>(['posts'], '/posts')
+const { data, error, isLoading, refetch } = useParsedQuery({
+  key: ['posts'],
+  url: '/posts',
+  schema: postsSchema
+})
 </script>
 
 <template>
