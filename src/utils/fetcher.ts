@@ -1,8 +1,8 @@
 import { isAxiosError, type AxiosRequestConfig } from 'axios'
 import { z } from 'zod'
+import { ValidationError, fromZodError } from 'zod-validation-error'
 
 import { axiosInstance, axiosInstanceWithToken } from '@/lib/axios-instance'
-import { ValidationError, fromZodError } from 'zod-validation-error'
 
 type FetchOptions<Z extends z.ZodTypeAny> = {
   url: string
