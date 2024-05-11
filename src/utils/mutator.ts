@@ -17,6 +17,7 @@ const getMutator = (method: AxiosRequestConfig['method'] = 'POST', useAuth = tru
 
   if (method === 'PUT') return instance.put
   if (method === 'PATCH') return instance.patch
+  if (method === 'DELETE') return instance.delete
 
   return instance.post
 }
