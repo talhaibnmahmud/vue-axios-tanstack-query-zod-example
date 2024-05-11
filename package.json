@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
+    "@tanstack/eslint-plugin-query": "^5.32.1",
     "@tanstack/vue-query-devtools": "^5.35.5",
     "@tsconfig/node20": "^20.1.4",
     "@types/jsdom": "^21.1.6",
