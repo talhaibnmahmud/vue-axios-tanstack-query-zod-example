@@ -26,6 +26,35 @@ const addPost = async () => {
   await mutation.mutateAsync(newPost)
   refetch()
 }
+
+const putMutation = useParsedMutation<Post, typeof postSchema>({
+  key: ['put'],
+  url: '/posts/1',
+  schema: postSchema,
+  useAuth: true,
+  options: {
+    method: 'PUT'
+  }
+})
+
+const putPost = async () => {
+  await putMutation.mutateAsync(newPost)
+  refetch()
+}
+
+const patchMutation = useParsedMutation<Partial<Post>, typeof postSchema>({
+  key: ['patch'],
+  url: '/posts/1',
+  schema: postSchema,
+  useAuth: true,
+  options: {
+    method: 'PATCH'
+  }
+})
+const patchPost = async () => {
+  await patchMutation.mutateAsync({ title: 'foo' })
+  refetch()
+}
 </script>
 
 <template>
@@ -49,6 +78,20 @@ const addPost = async () => {
           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         >
           Add Post
+        </button>
+        <button
+          @click="putPost"
+          :disabled="putMutation.isPending.value"
+          class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Put Post
+        </button>
+        <button
+          @click="patchPost"
+          :disabled="patchMutation.isPending.value"
+          class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Patch Post
         </button>
       </div>
 
