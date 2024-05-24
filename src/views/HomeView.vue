@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useParsedMutation } from '@/composables/useParsedMutation'
 import { useParsedQuery } from '@/composables/useParsedQuery'
-import { postsSchema, postSchema, type Post } from '@/schemas/post.schema'
+import { postSchema, postsSchema, type Post } from '@/schemas/post.schema'
 
 const { data, error, isLoading, refetch } = useParsedQuery({
   key: ['posts'],
@@ -18,18 +18,16 @@ const newPost: Post = {
 
 const mutation = useParsedMutation<Post, typeof postSchema>({
   key: ['post'],
-  url: '/posts',
   schema: postSchema
 })
 
 const addPost = async () => {
-  await mutation.mutateAsync(newPost)
+  await mutation.mutateAsync({ url: '/posts', body: newPost })
   refetch()
 }
 
 const putMutation = useParsedMutation<Post, typeof postSchema>({
   key: ['put'],
-  url: '/posts/1',
   schema: postSchema,
   useAuth: true,
   options: {
@@ -38,34 +36,38 @@ const putMutation = useParsedMutation<Post, typeof postSchema>({
 })
 
 const putPost = async () => {
-  await putMutation.mutateAsync(newPost)
+  await putMutation.mutateAsync({ url: '/posts/1', body: newPost })
   refetch()
 }
 
 const patchMutation = useParsedMutation<Partial<Post>, typeof postSchema>({
   key: ['patch'],
-  url: '/posts/1',
   schema: postSchema,
   useAuth: true,
   options: {
-    method: 'PATCH'
+    method: 'PATCH',
+    headers: {
+      'X-Custom-Header': 'foobar'
+    }
   }
 })
-const patchPost = async () => {
-  await patchMutation.mutateAsync({ title: 'foo' })
+const patchPost = async (postId: number) => {
+  await patchMutation.mutateAsync({ url: `/posts/${postId}`, body: { title: 'foo' } })
   refetch()
 }
 
 const deleteMutation = useParsedMutation({
   key: ['delete'],
-  url: '/posts/1',
   useAuth: true,
   options: {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: {
+      'X-Custom-Header': 'foobar'
+    }
   }
 })
-const deletePost = async () => {
-  await deleteMutation.mutateAsync(undefined)
+const deletePost = async (postId: number) => {
+  await deleteMutation.mutateAsync({ url: `/posts/${postId}` })
   refetch()
 }
 </script>
@@ -100,14 +102,14 @@ const deletePost = async () => {
           Put Post
         </button>
         <button
-          @click="patchPost"
+          @click="() => patchPost(Math.floor(Math.random() * 100) + 1)"
           :disabled="patchMutation.isPending.value"
           class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
         >
           Patch Post
         </button>
         <button
-          @click="deletePost"
+          @click="() => deletePost(Math.floor(Math.random() * 100) + 1)"
           :disabled="deleteMutation.isPending.value"
           class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
         >

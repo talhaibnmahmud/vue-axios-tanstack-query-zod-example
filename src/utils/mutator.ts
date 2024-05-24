@@ -4,7 +4,7 @@ import { ValidationError, fromZodError } from 'zod-validation-error'
 
 import { axiosInstance, axiosInstanceWithToken } from '@/lib/axios-instance'
 
-type FetchOptions<Z extends z.ZodTypeAny, D = any> = {
+type MutationOptions<Z extends z.ZodTypeAny, D = any> = {
   url: string
   body?: D
   schema?: Z
@@ -21,18 +21,21 @@ const getMutator = (method: AxiosRequestConfig['method'] = 'POST', useAuth = tru
 
   return instance.post
 }
-
 export const mutator = async <D = any, Z extends z.ZodTypeAny = z.ZodNever, R = z.infer<Z>>({
   url,
   body,
   schema,
   useAuth = true,
   options = { method: 'POST' }
-}: FetchOptions<Z, D>) => {
+}: MutationOptions<Z, D>) => {
   const mutator = getMutator(options.method, useAuth)
 
   try {
-    const response = await mutator<R>(url, body, options)
+    // If the method is DELETE, there's no need to send the body
+    const response =
+      options.method === 'DELETE'
+        ? await mutator<R>(url, options)
+        : await mutator<R>(url, body, options)
     if (!schema) return response.data
 
     const data = schema.parse(response.data)
