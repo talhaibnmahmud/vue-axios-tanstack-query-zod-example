@@ -31,7 +31,7 @@ export const useParsedMutation = <
   >({
     mutationKey: [key, schema, useAuth, options],
     mutationFn: (variables) =>
-      mutator<TVariables<TBody>['body'], Z, TData>({
+      mutator<TBody, Z, TData>({
         url: variables.url,
         body: variables.body,
         schema,
