@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useParsedMutation } from '@/composables/useParsedMutation'
 import { useParsedQuery } from '@/composables/useParsedQuery'
-import { postsSchema, postSchema, type Post } from '@/schemas/post.schema'
+import { postSchema, postsSchema, type Post } from '@/schemas/post.schema'
 
 const { data, error, isLoading, refetch } = useParsedQuery({
   key: ['posts'],
