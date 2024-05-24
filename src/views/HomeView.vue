@@ -45,7 +45,10 @@ const patchMutation = useParsedMutation<Partial<Post>, typeof postSchema>({
   schema: postSchema,
   useAuth: true,
   options: {
-    method: 'PATCH'
+    method: 'PATCH',
+    headers: {
+      'X-Custom-Header': 'foobar'
+    }
   }
 })
 const patchPost = async (postId: number) => {
@@ -57,7 +60,10 @@ const deleteMutation = useParsedMutation({
   key: ['delete'],
   useAuth: true,
   options: {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: {
+      'X-Custom-Header': 'foobar'
+    }
   }
 })
 const deletePost = async (postId: number) => {
