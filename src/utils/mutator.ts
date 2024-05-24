@@ -4,7 +4,7 @@ import { ValidationError, fromZodError } from 'zod-validation-error'
 
 import { axiosInstance, axiosInstanceWithToken } from '@/lib/axios-instance'
 
-type FetchOptions<Z extends z.ZodTypeAny, D = any> = {
+type MutationOptions<Z extends z.ZodTypeAny, D = any> = {
   url: string
   body?: D
   schema?: Z
@@ -27,7 +27,7 @@ export const mutator = async <D = any, Z extends z.ZodTypeAny = z.ZodNever, R = 
   schema,
   useAuth = true,
   options = { method: 'POST' }
-}: FetchOptions<Z, D>) => {
+}: MutationOptions<Z, D>) => {
   const mutator = getMutator(options.method, useAuth)
 
   try {
