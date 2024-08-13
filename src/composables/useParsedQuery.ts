@@ -1,10 +1,11 @@
-import { useQuery, type QueryKey } from '@tanstack/vue-query'
+import { useQuery, type QueryKey, type UseQueryOptions } from '@tanstack/vue-query'
 import type { AxiosRequestConfig } from 'axios'
 import { z } from 'zod'
 
 import { fetcher } from '@/utils/fetcher'
 
 type FetchOptions<Z extends z.ZodTypeAny> = {
+  queryOptions: UseQueryOptions<z.infer<Z>, Error>
   key: QueryKey
   url: string
   schema?: Z
@@ -13,15 +14,22 @@ type FetchOptions<Z extends z.ZodTypeAny> = {
 }
 
 export const useParsedQuery = <Z extends z.ZodTypeAny = z.ZodNever, D = z.infer<Z>>({
+  queryOptions,
   key,
   url,
   schema,
   useAuth = true,
   options = {}
 }: FetchOptions<Z>) => {
-  const query = useQuery<D, Error>({
+  const qoptions = {
+    ...queryOptions,
     queryKey: [key, url, schema, useAuth, options],
     queryFn: () => fetcher<Z>({ url, schema, useAuth, options })
+  }
+  const query = useQuery<D, Error>({
+    // queryKey: [key, url, schema, useAuth, options],
+    // queryFn: () => fetcher<Z>({ url, schema, useAuth, options }),
+    ...qoptions
   })
 
   return query
