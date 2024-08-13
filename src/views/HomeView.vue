@@ -1,12 +1,25 @@
 <script setup lang="ts">
 import { useParsedMutation } from '@/composables/useParsedMutation'
-import { useParsedQuery } from '@/composables/useParsedQuery'
 import { postSchema, postsSchema, type Post } from '@/schemas/post.schema'
+import { fetcher } from '@/utils/fetcher'
+import { useQuery } from '@tanstack/vue-query'
+import type { z } from 'zod'
 
-const { data, error, isLoading, refetch } = useParsedQuery({
-  key: ['posts'],
-  url: '/posts',
-  schema: postsSchema
+// const { data, error, isLoading, refetch } = useParsedQuery({
+//   queryOptions: { queryKey: ['posts'] },
+//   key: ['posts'],
+//   url: '/posts',
+//   schema: postsSchema
+// })
+
+const key = 'posts'
+const url = '/posts'
+const schema = postsSchema
+type Z = z.infer<typeof postsSchema>
+
+const { data, error, isLoading, refetch } = useQuery<Z>({
+  queryKey: [key, url, schema],
+  queryFn: () => fetcher({ url, schema })
 })
 
 const newPost: Post = {
@@ -118,7 +131,7 @@ const deletePost = async (postId: number) => {
       </div>
 
       <div v-if="isLoading">Loading...</div>
-      <div v-else-if="error">Error: {{ error }}</div>
+      <pre v-else-if="error">Error: {{ error }}</pre>
       <div v-else>
         <ul>
           <li v-for="post in data" :key="post.id">
